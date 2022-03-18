@@ -125,7 +125,7 @@ class BlockchainController {
                 if (arr.length <= 0) {
                     return res.status(200).json("Chain is valid");
                 } else {
-                    return res.status(401).json(arr);
+                    return res.status(201).json(arr);
                 }
                 
             } catch (error) {

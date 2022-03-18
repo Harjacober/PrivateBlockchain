@@ -209,14 +209,22 @@ class Blockchain {
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
             self.chain.forEach(block => {
-                if (!block.validate()) {
-                    errorLog.push(`Block at height ${block.height} is invalid.`)
+                // genesis block
+                if (block.height <= 0) {
+                    if (!block.validate()) {
+                        errorLog.push(`Block at height ${block.height} is invalid.`)
+                    }
+                } else {
+                    self.getBlockByHash(block.previousBlockHash).then(function(prevBlock){
+                        console.log(prevBlock);
+                        if (!block.validate() || !prevBlock.validate()) {
+                            errorLog.push(`Block at height ${block.height} is invalid.`)
+                        }
+                    })
+                    
                 }
-                if (block.height != 0 && !block.previousBlockHash) {
-                    errorLog.push(`Block chain is broken`)
-                }
-                resolve(errorLog)
             });
+            resolve(errorLog)
         });
     }
 
